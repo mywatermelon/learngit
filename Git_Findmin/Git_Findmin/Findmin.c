@@ -7,7 +7,7 @@ int Findmin(int*dest,int len)
 	int left = 0;
 	int right = len - 1;
 	int mid = left + (right - left) / 2;
-	assert(dest);
+	assert(dest&&(len>0));    
 	if (1 == len)
 	{
 		return *dest;
