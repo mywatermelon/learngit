@@ -297,7 +297,7 @@ void RemoveAll(PNode* PHead, int data)   //删除所有符合条件的元素
 
 }
 
-void UnionNode(PNode PHead1, PNode PHead2)    //寻找两个有序链表中的相同元素
+void UnionNode(PNode PHead1, PNode PHead2)    //输出两个已排序单链表中相同的数据
 {
 	PNode flag1 = NULL;
 	PNode flag2 = NULL;
@@ -307,7 +307,7 @@ void UnionNode(PNode PHead1, PNode PHead2)    //寻找两个有序链表中的相同元素
 	}
 	flag1 = PHead1;
 	flag2 = PHead2;
-	while(NULL != flag1&&NULL != flag2)
+	while(NULL != flag1 && NULL != flag2)
 	{
 		if (flag1->data == flag2->data)
 		{
@@ -336,7 +336,7 @@ void UnionNode(PNode PHead1, PNode PHead2)    //寻找两个有序链表中的相同元素
 
 }
 
-void ReverseEndToHead(PNode* PHead)
+void ReverseEndToHead(PNode* PHead)//翻转链表
 {
 	PNode newHead = NULL;
 	PNode flag1 = NULL;
@@ -356,6 +356,298 @@ void ReverseEndToHead(PNode* PHead)
 	*PHead = newHead;
 }
 
+PNode HasCircle(PNode PHead)//判断链表是否含环 如果含环返回快慢指针在环内的交点
+{
+	PNode fast = NULL;
+	PNode slow = NULL;
+	if(NULL == PHead||NULL==PHead->PNext )
+	{
+		return NULL;
+	}
+	fast = PHead->PNext->PNext;
+	slow = PHead->PNext;
+	while (fast != NULL && fast->PNext != NULL && fast != slow)
+	{
+		fast = fast->PNext->PNext;
+		slow = slow->PNext;
+	}
+	if (fast == NULL||NULL==fast->PNext)
+	{
+		return NULL;
+	}
+	else
+	{
+		return fast;
+	}
+}
+
+int SlistLen(PNode PHead)//求链表的长度
+{
+	PNode flag = NULL;
+	int len = 0;
+	if (NULL == PHead)
+	{
+		return len;
+	}
+	flag = PHead;
+	while (NULL != flag)
+	{
+		flag = flag->PNext;
+		len++;
+	}
+	return len;
+}
+
+int IsCros(PNode PHead1, PNode PHead2) //判断两个单链表是否相交 若相交返回1
+
+{
+	PNode flag1 = NULL;
+	PNode flag2 = NULL;
+	if (NULL == PHead1 || NULL == PHead2)
+	{
+		return 0;
+	}
+	flag1 = PHead1;
+	flag2 = PHead2;
+	while (NULL != flag1->PNext)
+	{
+		flag1 = flag1->PNext;
+	}
+	while (NULL != flag2->PNext)
+	{
+		flag2 = flag2->PNext;
+	}
+	if (flag1 == flag2)
+	{
+		return 1;
+	}
+	return 0;
+}
+
+PNode CrosNode(PNode PHead1, PNode PHead2)//求取两个相交链表的交点 如不想交返回NULL
+{
+	int Len1 = 0;
+	int Len2 = 0;
+	int step = 0;
+	PNode flag1 = NULL;
+	PNode flag2 = NULL;
+	if (0 == IsCros(PHead1, PHead2))
+	{
+		return NULL;
+	}
+	Len1 = SlistLen(PHead1);
+	Len2 = SlistLen(PHead2);
+	step = Len1 - Len2;
+	flag1 = PHead1;
+	flag2 = PHead2;
+	if (step > 0)
+	{
+		while (step--)
+		{
+			flag1 = flag1->PNext;
+		}
+	}
+	else
+	{
+		step = 0 - step;
+		while (step--)
+		{
+			flag2 = flag2->PNext;
+		}
+	}
+	while (flag1 != flag2)
+	{
+		flag1 = flag1->PNext;
+		flag2 = flag2->PNext;
+	}
+	return flag1;
+}
+
+
+PNode Together(PNode *PHead1, PNode *PHead2) //合并两个有序链表, 合并后依然有序
+{
+	PNode flag1 = NULL;
+	PNode flag2 = NULL;
+	PNode NewHead = NULL;
+	PNode Nflag = NULL;
+	if (NULL == (*PHead1))
+	{
+		return *PHead2;
+	}
+	if (NULL == (*PHead2))
+	{
+		return *PHead1;
+	}
+	flag1 = *PHead1;
+	flag2 = *PHead2;
+	if (flag1->data > flag2->data)
+	{
+		NewHead = flag2;
+		Nflag = NewHead;
+		flag2 = flag2->PNext;
+	}
+	else
+	{
+		NewHead = flag1;
+		Nflag = NewHead;
+		flag1 = flag1->PNext;
+	}
+	while (NULL != flag1&&NULL != flag2)
+	{
+		if (flag1->data > flag2->data)
+		{
+			Nflag->PNext = flag2;
+			Nflag = Nflag->PNext;
+			flag2 = flag2->PNext;
+		}
+		else
+		{
+			Nflag->PNext = flag1;
+			Nflag = Nflag->PNext;
+			flag1 = flag1->PNext;
+		}
+	}
+	if (NULL == flag1)
+	{
+		Nflag->PNext = flag2;
+	}
+	else
+	{
+		Nflag->PNext = flag1;
+	}
+	return NewHead;
+}
+
+void Bubble(PNode *PHead)//冒泡排序
+{
+	PNode pos = NULL;
+	PNode tail = NULL;
+	int flag = 0;
+	assert(PHead);
+	if (NULL == (*PHead) || NULL == (*PHead)->PNext)
+	{
+		return;
+	}
+	while (tail != (*PHead)->PNext)
+	{
+		pos = *PHead;
+		flag = 0;
+		while (pos->PNext != tail)
+		{
+			if (pos->data > pos->PNext->data)
+			{
+				int tmp = pos->data;
+				pos->data = pos->PNext->data;
+				pos->PNext->data = tmp;
+				flag = 1;
+			}
+			pos = pos->PNext;
+		}
+		if (0 == flag)
+		{
+			return;
+		}
+		tail = pos;
+	}
+}
+
+void QuickSoft(PNode *PHead)//快排
+{
+	PNode flag = NULL;
+	PNode tail = NULL;
+	PNode pos = NULL;
+	PNode Prepos = NULL;
+	if (NULL == (*PHead) || NULL == (*PHead)->PNext)
+	{
+		return;
+	}
+	while (tail != (*PHead)->PNext)
+	{
+		pos = *PHead;
+		flag = (*PHead)->PNext;
+		while (flag!= tail)
+		{
+			if (pos->data < flag->data)
+			{
+				pos = flag;
+			}
+			if (tail == flag->PNext)
+			{
+				Prepos = flag;
+				break;
+			}
+			flag = flag->PNext;
+
+		}
+		if (pos != Prepos)
+		{
+			int tmp = pos->data;
+			pos->data = Prepos->data;
+			Prepos->data = tmp;
+		}
+		tail = Prepos;
+	}
+}
+
+PNode Find_k(PNode PHead,int k) //查找倒数第k个元素
+{
+	PNode fast = NULL;
+	PNode slow = NULL;
+	if (NULL == PHead || k <= 0)
+	{
+		return NULL;
+	}
+	fast = PHead;
+	slow = PHead;
+	while (--k)
+	{
+		if (NULL == fast->PNext)
+		{
+			return NULL;
+		}
+		fast = fast->PNext;
+	}
+	while (fast->PNext != NULL)
+	{
+		fast = fast->PNext;
+		slow = slow->PNext;
+	}
+	return slow;
+}
+
+PNode JosephCircle(PNode *PHead, int step)
+{
+	PNode pos = NULL;
+	PNode flag = NULL;
+	if (NULL == (*PHead) || step<=1)
+	{
+		return NULL;
+	}
+
+}
+
+
+PNode CircleNode(PHead)//返回含环链表的环的入口点
+{
+	PNode MeetNode = NULL;
+	PNode flag = NULL;
+	if (NULL == PHead)
+	{
+		return NULL;
+	}
+	flag = PHead;
+	MeetNode = HasCircle(PHead);
+	if (!MeetNode)
+	{
+		return NULL;
+	}
+	while (flag != MeetNode)
+	{
+		flag = flag->PNext;
+		MeetNode = MeetNode->PNext;
+	}
+	return flag;
+}
 int HasCrosWithCircle(PNode PHead1, PNode PHead2)
 {
 	return 0;
